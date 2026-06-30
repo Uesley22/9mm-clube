@@ -1,0 +1,1635 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>9MM Clube de Tiro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --orange: #FF6A00;
+      --orange-light: #FF8C38;
+      --orange-dark: #CC5500;
+      --black: #0A0A0A;
+      --dark: #111111;
+      --dark2: #1A1A1A;
+      --dark3: #222222;
+      --gray: #888888;
+      --light: #F0F0F0;
+      --white: #FFFFFF;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--light);
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--dark); }
+    ::-webkit-scrollbar-thumb { background: var(--orange); border-radius: 3px; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      padding: 0 5%;
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(10,10,10,0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255,106,0,0.15);
+      transition: all 0.3s;
+    }
+    nav.scrolled {
+      height: 60px;
+      background: rgba(10,10,10,0.97);
+      border-bottom-color: rgba(255,106,0,0.3);
+    }
+    .logo {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 2rem;
+      letter-spacing: 4px;
+      color: var(--white);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .logo span {
+      color: var(--orange);
+      text-shadow: 0 0 20px rgba(255,106,0,0.6);
+    }
+    .logo-bullet {
+      width: 10px; height: 10px;
+      background: var(--orange);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--orange), 0 0 20px var(--orange);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%,100% { box-shadow: 0 0 10px var(--orange), 0 0 20px var(--orange); }
+      50% { box-shadow: 0 0 20px var(--orange), 0 0 40px var(--orange), 0 0 60px rgba(255,106,0,0.4); }
+    }
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+    .nav-links a {
+      color: var(--gray);
+      text-decoration: none;
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      transition: color 0.3s;
+      position: relative;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; left: 0;
+      width: 0; height: 2px;
+      background: var(--orange);
+      transition: width 0.3s;
+    }
+    .nav-links a:hover { color: var(--white); }
+    .nav-links a:hover::after { width: 100%; }
+    .nav-cta {
+      background: var(--orange);
+      color: var(--black) !important;
+      padding: 8px 20px;
+      border-radius: 2px;
+      font-weight: 700 !important;
+      transition: background 0.3s, transform 0.2s !important;
+    }
+    .nav-cta:hover { background: var(--orange-light) !important; transform: translateY(-1px); }
+    .nav-cta::after { display: none !important; }
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 5px;
+    }
+    .hamburger span {
+      display: block;
+      width: 25px; height: 2px;
+      background: var(--white);
+      transition: all 0.3s;
+    }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      padding: 0 5%;
+    }
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 80% at 60% 50%, rgba(255,106,0,0.08) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 40% at 20% 80%, rgba(255,106,0,0.05) 0%, transparent 50%),
+        linear-gradient(135deg, #0A0A0A 0%, #111111 50%, #0A0A0A 100%);
+    }
+    .hero-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,106,0,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,106,0,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse at 50% 50%, black 20%, transparent 80%);
+    }
+    .target-ring {
+      position: absolute;
+      right: 8%;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 420px; height: 420px;
+      opacity: 0.12;
+      pointer-events: none;
+    }
+    .target-ring svg { width: 100%; height: 100%; }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 700px;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,106,0,0.1);
+      border: 1px solid rgba(255,106,0,0.3);
+      border-radius: 2px;
+      padding: 6px 16px;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.8rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 1.5rem;
+    }
+    .hero-badge::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: var(--orange);
+      border-radius: 50%;
+    }
+    .hero-title {
+      font-family: 'Bebas Neue', cursive;
+      font-size: clamp(4rem, 10vw, 8rem);
+      line-height: 0.9;
+      letter-spacing: 2px;
+      margin-bottom: 1.5rem;
+    }
+    .hero-title .line1 { color: var(--white); display: block; }
+    .hero-title .line2 {
+      color: var(--orange);
+      display: block;
+      text-shadow: 0 0 40px rgba(255,106,0,0.4), 0 0 80px rgba(255,106,0,0.2);
+    }
+    .hero-title .line3 {
+      color: transparent;
+      -webkit-text-stroke: 2px rgba(255,255,255,0.2);
+      display: block;
+    }
+    .hero-desc {
+      font-size: 1.1rem;
+      color: var(--gray);
+      line-height: 1.8;
+      max-width: 520px;
+      margin-bottom: 2.5rem;
+    }
+    .hero-desc strong { color: var(--orange-light); font-weight: 600; }
+    .hero-buttons {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--orange);
+      color: var(--black);
+      padding: 14px 32px;
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-decoration: none;
+      border-radius: 2px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+    .btn-primary:hover::before { left: 100%; }
+    .btn-primary:hover {
+      background: var(--orange-light);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(255,106,0,0.4);
+    }
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: transparent;
+      color: var(--white);
+      padding: 14px 32px;
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-decoration: none;
+      border-radius: 2px;
+      border: 1px solid rgba(255,255,255,0.2);
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .btn-outline:hover {
+      border-color: var(--orange);
+      color: var(--orange);
+      transform: translateY(-2px);
+    }
+    .hero-stats {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      display: flex;
+      padding: 2rem 5%;
+      background: linear-gradient(0deg, rgba(10,10,10,0.9) 0%, transparent 100%);
+      gap: 3rem;
+      z-index: 2;
+    }
+    .stat { text-align: center; }
+    .stat-number {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 2.5rem;
+      color: var(--orange);
+      line-height: 1;
+      text-shadow: 0 0 20px rgba(255,106,0,0.5);
+    }
+    .stat-label {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gray);
+      margin-top: 4px;
+    }
+
+    /* ── SECTIONS COMMON ── */
+    section { padding: 100px 5%; }
+    .section-header { text-align: center; margin-bottom: 5rem; }
+    .section-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.8rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 1rem;
+    }
+    .section-tag::before, .section-tag::after {
+      content: '';
+      width: 30px; height: 1px;
+      background: var(--orange);
+      opacity: 0.5;
+    }
+    .section-title {
+      font-family: 'Bebas Neue', cursive;
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      letter-spacing: 3px;
+      color: var(--white);
+      line-height: 1;
+    }
+    .section-title span { color: var(--orange); }
+    .section-subtitle {
+      margin-top: 1rem;
+      font-size: 1rem;
+      color: var(--gray);
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.7;
+    }
+
+    /* ── ABOUT ── */
+    #sobre { background: var(--dark); }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
+    }
+    .about-visual {
+      position: relative;
+    }
+    .about-image-wrapper {
+      position: relative;
+      aspect-ratio: 4/5;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .about-image-bg {
+      width: 100%;
+      height: 100%;
+      background:
+        linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .about-crosshair {
+      width: 70%;
+      height: 70%;
+      opacity: 0.15;
+    }
+    .about-image-wrapper::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border: 2px solid rgba(255,106,0,0.2);
+      border-radius: 4px;
+      z-index: 2;
+    }
+    .about-accent-line {
+      position: absolute;
+      top: 20px; left: -20px;
+      width: 4px; height: 60%;
+      background: linear-gradient(180deg, var(--orange), transparent);
+      border-radius: 2px;
+    }
+    .about-accent-line2 {
+      position: absolute;
+      bottom: -20px; right: 20px;
+      width: 60%; height: 4px;
+      background: linear-gradient(90deg, transparent, var(--orange));
+      border-radius: 2px;
+    }
+    .about-badge-float {
+      position: absolute;
+      bottom: 30px; left: -30px;
+      background: var(--black);
+      border: 1px solid rgba(255,106,0,0.3);
+      padding: 16px 20px;
+      border-radius: 4px;
+      z-index: 3;
+    }
+    .about-badge-float .num {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 2.5rem;
+      color: var(--orange);
+      line-height: 1;
+    }
+    .about-badge-float .txt {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      color: var(--gray);
+      text-transform: uppercase;
+    }
+    .about-content h3 {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 2.5rem;
+      letter-spacing: 2px;
+      color: var(--white);
+      margin-bottom: 1.5rem;
+      line-height: 1.1;
+    }
+    .about-content h3 span { color: var(--orange); }
+    .about-content p {
+      color: var(--gray);
+      line-height: 1.8;
+      margin-bottom: 1.2rem;
+      font-size: 0.95rem;
+    }
+    .about-features {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+    .about-feature {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--light);
+      letter-spacing: 1px;
+    }
+    .about-feature::before {
+      content: '';
+      width: 8px; height: 8px;
+      background: var(--orange);
+      border-radius: 50%;
+      flex-shrink: 0;
+      box-shadow: 0 0 8px var(--orange);
+    }
+
+    /* ── MODALIDADES ── */
+    #modalidades { background: var(--black); }
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+    .card {
+      background: var(--dark);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 4px;
+      padding: 2.5rem 2rem;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s;
+      cursor: default;
+    }
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--orange), var(--orange-dark));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s;
+    }
+    .card:hover {
+      border-color: rgba(255,106,0,0.2);
+      transform: translateY(-6px);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,106,0,0.1);
+    }
+    .card:hover::before { transform: scaleX(1); }
+    .card-icon {
+      width: 60px; height: 60px;
+      background: rgba(255,106,0,0.08);
+      border: 1px solid rgba(255,106,0,0.2);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+      font-size: 1.8rem;
+      transition: all 0.3s;
+    }
+    .card:hover .card-icon {
+      background: rgba(255,106,0,0.15);
+      border-color: var(--orange);
+      box-shadow: 0 0 20px rgba(255,106,0,0.2);
+    }
+    .card h3 {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 1.6rem;
+      letter-spacing: 2px;
+      color: var(--white);
+      margin-bottom: 0.8rem;
+    }
+    .card p {
+      color: var(--gray);
+      font-size: 0.9rem;
+      line-height: 1.7;
+    }
+    .card-tag {
+      display: inline-block;
+      margin-top: 1.2rem;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--orange);
+      border: 1px solid rgba(255,106,0,0.3);
+      padding: 3px 10px;
+      border-radius: 2px;
+    }
+
+    /* ── RANGE / INSTALAÇÕES ── */
+    #instalacoes { background: var(--dark); }
+    .range-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      grid-template-rows: auto auto;
+      gap: 1.5rem;
+    }
+    .range-item {
+      background: var(--dark2);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 4px;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.3s;
+    }
+    .range-item:hover { border-color: rgba(255,106,0,0.3); }
+    .range-item.main { grid-row: 1 / 3; }
+    .range-visual {
+      flex: 1;
+      min-height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .range-item.main .range-visual { min-height: 400px; }
+    .range-visual-bg {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .range-icon-large { font-size: 6rem; opacity: 0.06; }
+    .range-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(0deg, rgba(10,10,10,0.9) 0%, transparent 60%);
+    }
+    .range-info {
+      padding: 1.5rem;
+    }
+    .range-info h4 {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 1.4rem;
+      letter-spacing: 2px;
+      color: var(--white);
+      margin-bottom: 0.5rem;
+    }
+    .range-info p { color: var(--gray); font-size: 0.85rem; line-height: 1.6; }
+    .range-spec {
+      display: flex;
+      gap: 1rem;
+      margin-top: 0.8rem;
+    }
+    .spec-badge {
+      background: rgba(255,106,0,0.1);
+      border: 1px solid rgba(255,106,0,0.2);
+      padding: 4px 10px;
+      border-radius: 2px;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 1px;
+      color: var(--orange-light);
+    }
+
+    /* ── SEPARADOR ── */
+    .divider-section {
+      padding: 80px 5%;
+      background:
+        linear-gradient(90deg, rgba(255,106,0,0.05) 0%, rgba(255,106,0,0.12) 50%, rgba(255,106,0,0.05) 100%),
+        var(--black);
+      border-top: 1px solid rgba(255,106,0,0.1);
+      border-bottom: 1px solid rgba(255,106,0,0.1);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .divider-section::before {
+      content: '9MM';
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: 'Bebas Neue', cursive;
+      font-size: 20rem;
+      color: rgba(255,106,0,0.03);
+      letter-spacing: 20px;
+      pointer-events: none;
+      user-select: none;
+    }
+    .divider-quote {
+      font-family: 'Bebas Neue', cursive;
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      letter-spacing: 4px;
+      color: var(--white);
+      position: relative;
+      z-index: 1;
+    }
+    .divider-quote span { color: var(--orange); }
+
+    /* ── INSTRUTORES ── */
+    #instrutores { background: var(--black); }
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 2rem;
+    }
+    .team-card {
+      background: var(--dark);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 4px;
+      overflow: hidden;
+      transition: all 0.3s;
+    }
+    .team-card:hover {
+      border-color: rgba(255,106,0,0.3);
+      transform: translateY(-4px);
+    }
+    .team-photo {
+      height: 260px;
+      background: linear-gradient(135deg, #1a1a1a, #111);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .team-photo-icon { font-size: 5rem; opacity: 0.15; }
+    .team-photo-badge {
+      position: absolute;
+      top: 1rem; right: 1rem;
+      background: var(--orange);
+      color: var(--black);
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      font-size: 0.7rem;
+      letter-spacing: 2px;
+      padding: 4px 10px;
+      border-radius: 2px;
+    }
+    .team-info { padding: 1.5rem; }
+    .team-info h4 {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 1.5rem;
+      letter-spacing: 2px;
+      color: var(--white);
+      margin-bottom: 0.3rem;
+    }
+    .team-role {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.8rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 0.8rem;
+    }
+    .team-desc { color: var(--gray); font-size: 0.85rem; line-height: 1.6; }
+
+    /* ── ASSOCIE-SE ── */
+    #associese { background: var(--dark); }
+    .plans-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      align-items: start;
+    }
+    .plan {
+      background: var(--dark2);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 4px;
+      padding: 2.5rem;
+      position: relative;
+      transition: all 0.3s;
+    }
+    .plan.featured {
+      background: var(--dark3);
+      border-color: var(--orange);
+      box-shadow: 0 0 60px rgba(255,106,0,0.15);
+      transform: scale(1.03);
+    }
+    .plan-badge-featured {
+      position: absolute;
+      top: -1px; left: 50%;
+      transform: translateX(-50%);
+      background: var(--orange);
+      color: var(--black);
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      font-size: 0.7rem;
+      letter-spacing: 3px;
+      padding: 5px 16px;
+      border-radius: 0 0 4px 4px;
+    }
+    .plan-name {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 1.8rem;
+      letter-spacing: 3px;
+      color: var(--white);
+      margin-bottom: 0.3rem;
+    }
+    .plan-desc { color: var(--gray); font-size: 0.85rem; margin-bottom: 1.5rem; }
+    .plan-price {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 3.5rem;
+      color: var(--orange);
+      line-height: 1;
+      text-shadow: 0 0 20px rgba(255,106,0,0.3);
+    }
+    .plan-price sup {
+      font-size: 1.5rem;
+      vertical-align: top;
+      margin-top: 0.5rem;
+    }
+    .plan-period {
+      font-family: 'Rajdhani', sans-serif;
+      color: var(--gray);
+      font-size: 0.85rem;
+      margin-bottom: 2rem;
+    }
+    .plan-features { list-style: none; margin-bottom: 2rem; }
+    .plan-features li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      font-size: 0.9rem;
+      color: var(--light);
+    }
+    .plan-features li::before {
+      content: '✓';
+      color: var(--orange);
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .plan-features li.disabled { color: var(--gray); opacity: 0.4; }
+    .plan-features li.disabled::before { content: '✗'; color: var(--gray); }
+
+    /* ── CONTATO ── */
+    #contato { background: var(--black); }
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 5rem;
+      align-items: start;
+    }
+    .contact-info h3 {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 2.5rem;
+      letter-spacing: 3px;
+      color: var(--white);
+      margin-bottom: 1rem;
+    }
+    .contact-info p { color: var(--gray); line-height: 1.8; margin-bottom: 2rem; }
+    .contact-items { display: flex; flex-direction: column; gap: 1.5rem; }
+    .contact-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+    .contact-icon {
+      width: 44px; height: 44px;
+      background: rgba(255,106,0,0.1);
+      border: 1px solid rgba(255,106,0,0.2);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .contact-text strong {
+      display: block;
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: var(--white);
+      margin-bottom: 3px;
+    }
+    .contact-text span { color: var(--gray); font-size: 0.9rem; }
+    .contact-form {
+      background: var(--dark);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 4px;
+      padding: 2.5rem;
+    }
+    .form-group { margin-bottom: 1.2rem; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    label {
+      display: block;
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 600;
+      font-size: 0.8rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gray);
+      margin-bottom: 8px;
+    }
+    input, select, textarea {
+      width: 100%;
+      background: var(--dark2);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 2px;
+      padding: 12px 16px;
+      color: var(--white);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      transition: all 0.3s;
+      outline: none;
+      appearance: none;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--orange);
+      box-shadow: 0 0 0 3px rgba(255,106,0,0.1);
+    }
+    input::placeholder, textarea::placeholder { color: rgba(255,255,255,0.2); }
+    textarea { resize: vertical; min-height: 120px; }
+    select option { background: var(--dark2); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--dark);
+      border-top: 1px solid rgba(255,106,0,0.1);
+      padding: 4rem 5% 2rem;
+    }
+    .footer-top {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 3rem;
+      margin-bottom: 3rem;
+    }
+    .footer-brand .logo { font-size: 2rem; margin-bottom: 1rem; }
+    .footer-brand p { color: var(--gray); font-size: 0.85rem; line-height: 1.7; max-width: 260px; }
+    .footer-col h5 {
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      font-size: 0.8rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--white);
+      margin-bottom: 1.2rem;
+    }
+    .footer-col ul { list-style: none; }
+    .footer-col ul li { margin-bottom: 0.7rem; }
+    .footer-col ul li a {
+      color: var(--gray);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color 0.2s;
+    }
+    .footer-col ul li a:hover { color: var(--orange); }
+    .social-links { display: flex; gap: 0.8rem; margin-top: 1.5rem; }
+    .social-link {
+      width: 38px; height: 38px;
+      background: var(--dark2);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gray);
+      text-decoration: none;
+      font-size: 1rem;
+      transition: all 0.3s;
+    }
+    .social-link:hover {
+      background: var(--orange);
+      color: var(--black);
+      border-color: var(--orange);
+      transform: translateY(-2px);
+    }
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding-top: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .footer-bottom p { color: var(--gray); font-size: 0.8rem; }
+    .footer-bottom span { color: var(--orange); }
+    .legal-links { display: flex; gap: 1.5rem; }
+    .legal-links a { color: var(--gray); text-decoration: none; font-size: 0.8rem; transition: color 0.2s; }
+    .legal-links a:hover { color: var(--orange); }
+
+    /* ── ANIMATIONS ── */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .delay-1 { transition-delay: 0.1s; }
+    .delay-2 { transition-delay: 0.2s; }
+    .delay-3 { transition-delay: 0.3s; }
+    .delay-4 { transition-delay: 0.4s; }
+
+    /* ── BACK TO TOP ── */
+    #back-top {
+      position: fixed;
+      bottom: 2rem; right: 2rem;
+      width: 44px; height: 44px;
+      background: var(--orange);
+      color: var(--black);
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.3s;
+      z-index: 999;
+    }
+    #back-top.visible { opacity: 1; transform: translateY(0); }
+    #back-top:hover { background: var(--orange-light); transform: translateY(-3px); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
+      .range-grid { grid-template-columns: 1fr; }
+      .range-item.main { grid-row: auto; }
+      .footer-top { grid-template-columns: 1fr 1fr; }
+      .hero-stats { gap: 1.5rem; }
+      .plan.featured { transform: none; }
+    }
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      .nav-links.open {
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        top: 72px; left: 0; right: 0;
+        background: rgba(10,10,10,0.98);
+        padding: 2rem;
+        gap: 1.5rem;
+        border-bottom: 1px solid rgba(255,106,0,0.2);
+        backdrop-filter: blur(20px);
+      }
+      .hero-stats { flex-wrap: wrap; gap: 2rem; }
+      .target-ring { display: none; }
+      .about-badge-float { display: none; }
+      .footer-top { grid-template-columns: 1fr; }
+      section { padding: 70px 5%; }
+      .form-row { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 480px) {
+      .hero-buttons { flex-direction: column; }
+      .btn-primary, .btn-outline { justify-content: center; }
+      .about-features { grid-template-columns: 1fr; }
+    }
+
+    /* ── GRADIENT DIVIDERS ── */
+    .section-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,106,0,0.3), transparent);
+      margin: 0 5%;
+    }
+
+    /* Target SVG animation */
+    @keyframes spin-slow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    .target-outer { animation: spin-slow 30s linear infinite; transform-origin: center; }
+
+    /* Counter animation */
+    .counter { display: inline-block; }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav id="navbar">
+  <a href="#hero" class="logo">
+    <div class="logo-bullet"></div>
+    <span>9mm</span> CLUBE DE TIRO
+  </a>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="#sobre">Sobre</a></li>
+    <li><a href="#modalidades">Modalidades</a></li>
+    <li><a href="#instalacoes">Instalações</a></li>
+    <li><a href="#instrutores">Instrutores</a></li>
+    <li><a href="#associese">Planos</a></li>
+    <li><a href="#contato" class="nav-cta">Associe-se</a></li>
+  </ul>
+  <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- ── HERO ── -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+
+  <!-- Target rings decoration -->
+  <div class="target-ring">
+    <svg viewBox="0 0 420 420" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <g class="target-outer">
+        <circle cx="210" cy="210" r="200" stroke="#FF6A00" stroke-width="1"/>
+        <circle cx="210" cy="210" r="160" stroke="#FF6A00" stroke-width="1"/>
+        <circle cx="210" cy="210" r="120" stroke="#FF6A00" stroke-width="1"/>
+        <circle cx="210" cy="210" r="80" stroke="#FF6A00" stroke-width="1.5"/>
+        <circle cx="210" cy="210" r="40" stroke="#FF6A00" stroke-width="2"/>
+        <circle cx="210" cy="210" r="10" fill="#FF6A00"/>
+        <line x1="210" y1="10" x2="210" y2="410" stroke="#FF6A00" stroke-width="0.5"/>
+        <line x1="10" y1="210" x2="410" y2="210" stroke="#FF6A00" stroke-width="0.5"/>
+        <line x1="62" y1="62" x2="358" y2="358" stroke="#FF6A00" stroke-width="0.5" stroke-dasharray="4 8"/>
+        <line x1="358" y1="62" x2="62" y2="358" stroke="#FF6A00" stroke-width="0.5" stroke-dasharray="4 8"/>
+        <text x="215" y="50" fill="#FF6A00" font-size="14" font-family="monospace">N</text>
+        <text x="215" y="378" fill="#FF6A00" font-size="14" font-family="monospace">S</text>
+        <text x="20" y="215" fill="#FF6A00" font-size="14" font-family="monospace">W</text>
+        <text x="388" y="215" fill="#FF6A00" font-size="14" font-family="monospace">E</text>
+      </g>
+    </svg>
+  </div>
+
+  <div class="hero-content">
+    <div class="hero-badge">Clube de Tiro Esportivo Fundado em 2010</div>
+    <h1 class="hero-title">
+      <span class="line1">PRECISÃO</span>
+      <span class="line2">9MM</span>
+      <span class="line3">CLUBE</span>
+    </h1>
+    <p class="hero-desc">
+      O clube de tiro esportivo mais <strong>completo do Brasil</strong>.
+      Treinamento de élite, instrutores certificados e infraestrutura de ponta
+      para você <strong>evoluir ao máximo</strong>.
+    </p>
+    <div class="hero-buttons">
+      <a href="#associese" class="btn-primary">
+        <span>&#10148;</span> Quero me associar
+      </a>
+      <a href="#sobre" class="btn-outline">
+        Conhecer o clube
+      </a>
+    </div>
+  </div>
+
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-number"><span class="counter" data-target="2500">0</span>+</div>
+      <div class="stat-label">Associados</div>
+    </div>
+    <div class="stat">
+      <div class="stat-number"><span class="counter" data-target="15">0</span></div>
+      <div class="stat-label">Rampas de Tiro</div>
+    </div>
+    <div class="stat">
+      <div class="stat-number"><span class="counter" data-target="14">0</span>+</div>
+      <div class="stat-label">Anos de história</div>
+    </div>
+    <div class="stat">
+      <div class="stat-number"><span class="counter" data-target="320">0</span>+</div>
+      <div class="stat-label">Campeonatos</div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ── SOBRE ── -->
+<section id="sobre">
+  <div class="about-grid">
+    <div class="about-visual">
+      <div class="about-image-wrapper">
+        <div class="about-image-bg">
+          <svg class="about-crosshair" viewBox="0 0 300 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="150" cy="150" r="140" stroke="#FF6A00" stroke-width="2"/>
+            <circle cx="150" cy="150" r="100" stroke="#FF6A00" stroke-width="1.5"/>
+            <circle cx="150" cy="150" r="60" stroke="#FF6A00" stroke-width="1.5"/>
+            <circle cx="150" cy="150" r="25" stroke="#FF6A00" stroke-width="2"/>
+            <circle cx="150" cy="150" r="5" fill="#FF6A00"/>
+            <line x1="150" y1="10" x2="150" y2="290" stroke="#FF6A00" stroke-width="1"/>
+            <line x1="10" y1="150" x2="290" y2="150" stroke="#FF6A00" stroke-width="1"/>
+          </svg>
+        </div>
+        <div class="range-overlay"></div>
+      </div>
+      <div class="about-accent-line"></div>
+      <div class="about-accent-line2"></div>
+      <div class="about-badge-float">
+        <div class="num">#1</div>
+        <div class="txt">Clube do Estado</div>
+      </div>
+    </div>
+
+    <div class="about-content">
+      <div class="section-tag">Nossa história</div>
+      <h3>MUITO MAIS QUE <span>PONTARIA</span>, UMA FILOSOFIA DE VIDA</h3>
+      <p>O 9MM Clube de Tiro foi fundado com uma missão clara: criar um espaço onde a excelência no tiro esportivo encontra a segurança absoluta e a comunidade vibrante.</p>
+      <p>Com mais de 14 anos de história, formamos campeões nacionais e internacionais, e acima de tudo, cidadãos responsáveis que entendem a importância do manejo seguro de armas.</p>
+      <p>Nossa estrutura de última geração, aliada a instrutores com currículo internacional, coloca o 9MM em um patamar único no Brasil.</p>
+      <div class="about-features">
+        <div class="about-feature">Segurança máxima</div>
+        <div class="about-feature">Instrutores certificados</div>
+        <div class="about-feature">Equipamentos modernos</div>
+        <div class="about-feature">Comunidade ativa</div>
+        <div class="about-feature">Competições oficiais</div>
+        <div class="about-feature">Acervo completo</div>
+      </div>
+      <a href="#modalidades" class="btn-primary">Ver modalidades</a>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ── MODALIDADES ── -->
+<section id="modalidades">
+  <div class="section-header">
+    <div class="section-tag">Esporte & Técnica</div>
+    <h2 class="section-title">NOSSAS <span>MODALIDADES</span></h2>
+    <p class="section-subtitle">Do iniciante ao atirador élite, temos a modalidade ideal para cada perfil e objetivo.</p>
+  </div>
+  <div class="cards-grid">
+    <div class="card fade-up">
+      <div class="card-icon">🎯</div>
+      <h3>IPSC / IPDA</h3>
+      <p>Tiro prático com ênfase em velocidade, precisão e potência. Competições locais, nacionais e qualificatórias internacionais.</p>
+      <span class="card-tag">Competitivo</span>
+    </div>
+    <div class="card fade-up delay-1">
+      <div class="card-icon">🏆</div>
+      <h3>TIRO OLÍMPICO</h3>
+      <p>Modalidade oficial das Olimpíadas. Pistola e carabina de pressão com foco em técnica refinada e controle mental.</p>
+      <span class="card-tag">Olímpico</span>
+    </div>
+    <div class="card fade-up delay-2">
+      <div class="card-icon">🔫</div>
+      <h3>TIRO DE DEFESA</h3>
+      <p>Treinamento focado em autodefesa real. Técnicas de manejo, reabastecimento e tiro em situações de estresse.</p>
+      <span class="card-tag">Defesa Pessoal</span>
+    </div>
+    <div class="card fade-up delay-3">
+      <div class="card-icon">🦅</div>
+      <h3>LONG RANGE</h3>
+      <p>Tiro de longa distância com rifles de precisão. Alvos a partir de 100m até 1.000m para atiradores avançados.</p>
+      <span class="card-tag">Distância</span>
+    </div>
+    <div class="card fade-up">
+      <div class="card-icon">⚡</div>
+      <h3>SPEED SHOOTING</h3>
+      <p>Foco máximo em velocidade de disparo. Treinamento de draw, split times e sequências de alvos múltiplos.</p>
+      <span class="card-tag">Velocidade</span>
+    </div>
+    <div class="card fade-up delay-1">
+      <div class="card-icon">🌟</div>
+      <h3>INICIANTES</h3>
+      <p>Curso completo para quem nunca tocou em uma arma. Segurança, legislação, manejo e primeiros disparos guiados.</p>
+      <span class="card-tag">Iniciante</span>
+    </div>
+  </div>
+</section>
+
+<!-- ── DIVIDER QUOTE ── -->
+<div class="divider-section">
+  <p class="divider-quote">
+    "PRECISÃO NÃO É SORTE —<br/> É <span>TREINAMENTO</span> E <span>DISCIPLINA</span>"
+  </p>
+</div>
+
+<!-- ── INSTALAÇÕES ── -->
+<section id="instalacoes">
+  <div class="section-header">
+    <div class="section-tag">Estrutura</div>
+    <h2 class="section-title">NOSSAS <span>INSTALAÇÕES</span></h2>
+    <p class="section-subtitle">Infraestrutura de nível mundial para você treinar nas melhores condições.</p>
+  </div>
+  <div class="range-grid">
+    <div class="range-item main fade-up">
+      <div class="range-visual">
+        <div class="range-visual-bg">
+          <div class="range-icon-large">🎯</div>
+        </div>
+        <div class="range-overlay"></div>
+        <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:1;">
+          <svg width="250" height="250" viewBox="0 0 300 300" fill="none" xmlns="http://www.w3.org/2000/svg" style="opacity:0.3">
+            <circle cx="150" cy="150" r="140" stroke="#FF6A00" stroke-width="2"/>
+            <circle cx="150" cy="150" r="100" stroke="#FF6A00" stroke-width="2"/>
+            <circle cx="150" cy="150" r="60" stroke="#FF6A00" stroke-width="2"/>
+            <circle cx="150" cy="150" r="25" stroke="#FF6A00" stroke-width="3"/>
+            <circle cx="150" cy="150" r="8" fill="#FF6A00"/>
+            <line x1="150" y1="10" x2="150" y2="290" stroke="#FF6A00" stroke-width="1"/>
+            <line x1="10" y1="150" x2="290" y2="150" stroke="#FF6A00" stroke-width="1"/>
+          </svg>
+        </div>
+      </div>
+      <div class="range-info">
+        <h4>STAND PRINCIPAL — 25 METROS</h4>
+        <p>15 rampas cobertas com ventilação forçada, iluminação profissional e sistema de alvo eletrônico automatizado.</p>
+        <div class="range-spec">
+          <span class="spec-badge">15 Rampas</span>
+          <span class="spec-badge">25m</span>
+          <span class="spec-badge">Climatizado</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="range-item fade-up delay-1">
+      <div class="range-visual" style="min-height:160px;">
+        <div class="range-visual-bg">
+          <div class="range-icon-large">🏋️</div>
+        </div>
+        <div class="range-overlay"></div>
+      </div>
+      <div class="range-info">
+        <h4>SALA DE SECO</h4>
+        <p>Treinamento de draw, movimento e manejo sem munição.</p>
+        <div class="range-spec">
+          <span class="spec-badge">200m²</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="range-item fade-up delay-2">
+      <div class="range-visual" style="min-height:160px;">
+        <div class="range-visual-bg">
+          <div class="range-icon-large">🦅</div>
+        </div>
+        <div class="range-overlay"></div>
+      </div>
+      <div class="range-info">
+        <h4>CAMPO LONG RANGE</h4>
+        <p>Área aberta com alvos de 100m a 1.000m para rifles de precisão.</p>
+        <div class="range-spec">
+          <span class="spec-badge">1km</span>
+          <span class="spec-badge">Externo</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ── INSTRUTORES ── -->
+<section id="instrutores">
+  <div class="section-header">
+    <div class="section-tag">Time de élite</div>
+    <h2 class="section-title">NOSSOS <span>INSTRUTORES</span></h2>
+    <p class="section-subtitle">Campeões nacionais e veteranos com certificações internacionais prontos para elevar seu nível.</p>
+  </div>
+  <div class="team-grid">
+    <div class="team-card fade-up">
+      <div class="team-photo">
+        <div class="team-photo-icon">🎯</div>
+        <div class="team-photo-badge">IPSC MASTER</div>
+      </div>
+      <div class="team-info">
+        <h4>CORONEL MARCOS SILVA</h4>
+        <div class="team-role">Diretor Técnico</div>
+        <p class="team-desc">Ex-atirador olímpico, 3x campeão nacional de IPSC. Certificação NROI International. 25 anos de experiência.</p>
+      </div>
+    </div>
+    <div class="team-card fade-up delay-1">
+      <div class="team-photo">
+        <div class="team-photo-icon">🏆</div>
+        <div class="team-photo-badge">CAMPEÃ BR</div>
+      </div>
+      <div class="team-info">
+        <h4>CAPITÃ ANA TORRES</h4>
+        <div class="team-role">Instrutora Sênior</div>
+        <p class="team-desc">5x campeã brasileira feminina. Especialista em tiro de defesa e IPDA. Formação em pedagogia esportiva.</p>
+      </div>
+    </div>
+    <div class="team-card fade-up delay-2">
+      <div class="team-photo">
+        <div class="team-photo-icon">🦅</div>
+        <div class="team-photo-badge">SNIPER</div>
+      </div>
+      <div class="team-info">
+        <h4>SARGENTO PEDRO MELO</h4>
+        <div class="team-role">Especialista Long Range</div>
+        <p class="team-desc">Ex-Forças Especiais, especialista em tiro de precisão de longa distância. Record nacional a 1.200m.</p>
+      </div>
+    </div>
+    <div class="team-card fade-up delay-3">
+      <div class="team-photo">
+        <div class="team-photo-icon">⚡</div>
+        <div class="team-photo-badge">INSTRUTOR</div>
+      </div>
+      <div class="team-info">
+        <h4>RAFAEL COSTA</h4>
+        <div class="team-role">Instrutor de Iniciantes</div>
+        <p class="team-desc">Especializado em cursos introdutórios. Pedagogia focada em segurança e confiança para novos atiradores.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ── PLANOS ── -->
+<section id="associese">
+  <div class="section-header">
+    <div class="section-tag">Associação</div>
+    <h2 class="section-title">ESCOLHA SEU <span>PLANO</span></h2>
+    <p class="section-subtitle">Planos flexíveis para cada nível de comprometimento. Sem taxa de adesão no primeiro mês.</p>
+  </div>
+  <div class="plans-grid">
+    <div class="plan fade-up">
+      <div class="plan-name">BÁSICO</div>
+      <div class="plan-desc">Para o atirador ocasional</div>
+      <div class="plan-price"><sup>R$</sup>197</div>
+      <div class="plan-period">/mês · cobrança mensal</div>
+      <ul class="plan-features">
+        <li>8 sessões de tiro/mês</li>
+        <li>Acesso ao stand 25m</li>
+        <li>Armário individual</li>
+        <li>1 aula com instrutor/mês</li>
+        <li class="disabled">Stand Long Range</li>
+        <li class="disabled">Competições internas</li>
+        <li class="disabled">Acervo de armas</li>
+      </ul>
+      <a href="#contato" class="btn-outline" style="width:100%;justify-content:center;">Começar agora</a>
+    </div>
+
+    <div class="plan featured fade-up delay-1">
+      <div class="plan-badge-featured">MAIS POPULAR</div>
+      <div class="plan-name">INTERMEDIÁRIO</div>
+      <div class="plan-desc">Para o atirador dedicado</div>
+      <div class="plan-price"><sup>R$</sup>347</div>
+      <div class="plan-period">/mês · cobrança mensal</div>
+      <ul class="plan-features">
+        <li>Sessões ilimitadas</li>
+        <li>Todos os stands</li>
+        <li>Armário premium</li>
+        <li>4 aulas/mês com instrutor</li>
+        <li>Stand Long Range</li>
+        <li>Competições internas</li>
+        <li class="disabled">Acervo de armas VIP</li>
+      </ul>
+      <a href="#contato" class="btn-primary" style="width:100%;justify-content:center;">Começar agora</a>
+    </div>
+
+    <div class="plan fade-up delay-2">
+      <div class="plan-name">ÉLITE</div>
+      <div class="plan-desc">Para o atirador profissional</div>
+      <div class="plan-price"><sup>R$</sup>597</div>
+      <div class="plan-period">/mês · cobrança mensal</div>
+      <ul class="plan-features">
+        <li>Acesso irrestrito 7 dias</li>
+        <li>Todos os stands 24h</li>
+        <li>Armário premium + cofre</li>
+        <li>Treinos ilimitados c/ instrutor</li>
+        <li>Stand Long Range VIP</li>
+        <li>Competições internas e externas</li>
+        <li>Acervo completo de armas</li>
+      </ul>
+      <a href="#contato" class="btn-outline" style="width:100%;justify-content:center;">Começar agora</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── CONTATO ── -->
+<section id="contato" style="background: var(--dark);">
+  <div class="section-header">
+    <div class="section-tag">Fale conosco</div>
+    <h2 class="section-title">ENTRE EM <span>CONTATO</span></h2>
+    <p class="section-subtitle">Pronto para dar o próximo passo? Fale com nossa equipe e dê início à sua jornada.</p>
+  </div>
+  <div class="contact-grid">
+    <div class="contact-info fade-up">
+      <h3>VAMOS CONVERSAR</h3>
+      <p>Nossa equipe está disponível para tirar suas dúvidas, apresentar o clube e ajudá-lo a escolher o plano ideal. Agende uma visita e venha conhecer pessoalmente.</p>
+      <div class="contact-items">
+        <div class="contact-item">
+          <div class="contact-icon">📍</div>
+          <div class="contact-text">
+            <strong>Endereço</strong>
+            <span>Rua das Armas, 999 — Zona Industrial<br/>São Paulo, SP — CEP 00000-000</span>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">📞</div>
+          <div class="contact-text">
+            <strong>Telefone / WhatsApp</strong>
+            <span>(11) 99999-9999</span>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">📧</div>
+          <div class="contact-text">
+            <strong>E-mail</strong>
+            <span>contato@9mmclube.com.br</span>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">🕐</div>
+          <div class="contact-text">
+            <strong>Horário de funcionamento</strong>
+            <span>Seg–Sex: 07h às 22h<br/>Sáb–Dom: 08h às 18h</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="contact-form fade-up delay-2">
+      <form onsubmit="handleSubmit(event)">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="nome">Nome completo</label>
+            <input type="text" id="nome" placeholder="Seu nome" required />
+          </div>
+          <div class="form-group">
+            <label for="telefone">Telefone</label>
+            <input type="tel" id="telefone" placeholder="(00) 00000-0000" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="email">E-mail</label>
+          <input type="email" id="email" placeholder="seu@email.com" required />
+        </div>
+        <div class="form-group">
+          <label for="interesse">Interesse</label>
+          <select id="interesse">
+            <option value="">Selecione uma opção</option>
+            <option>Associação — Plano Básico</option>
+            <option>Associação — Plano Intermediário</option>
+            <option>Associação — Plano Élite</option>
+            <option>Curso para Iniciantes</option>
+            <option>Visita ao clube</option>
+            <option>Outro</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="mensagem">Mensagem</label>
+          <textarea id="mensagem" placeholder="Conte-nos um pouco sobre você e seus objetivos no tiro esportivo..."></textarea>
+        </div>
+        <button type="submit" class="btn-primary" style="width:100%;justify-content:center;font-size:1rem;">
+          <span>&#10148;</span> Enviar mensagem
+        </button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <a href="#hero" class="logo">
+        <div class="logo-bullet"></div>
+        <span>9MM</span>
+      </a>
+      <p style="margin-top:1rem;">O clube de tiro esportivo mais completo do Brasil. Precisão, segurança e excelência desde 2010.</p>
+      <div class="social-links">
+        <a href="#" class="social-link" title="Instagram">📸</a>
+        <a href="#" class="social-link" title="YouTube">▶</a>
+        <a href="#" class="social-link" title="Facebook">f</a>
+        <a href="#" class="social-link" title="WhatsApp">💬</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h5>Clube</h5>
+      <ul>
+        <li><a href="#sobre">Sobre nós</a></li>
+        <li><a href="#instrutores">Instrutores</a></li>
+        <li><a href="#instalacoes">Instalações</a></li>
+        <li><a href="#contato">Contato</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Modalidades</h5>
+      <ul>
+        <li><a href="#modalidades">IPSC / IPDA</a></li>
+        <li><a href="#modalidades">Tiro Olímpico</a></li>
+        <li><a href="#modalidades">Long Range</a></li>
+        <li><a href="#modalidades">Tiro de Defesa</a></li>
+        <li><a href="#modalidades">Iniciantes</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Planos</h5>
+      <ul>
+        <li><a href="#associese">Plano Básico</a></li>
+        <li><a href="#associese">Plano Intermediário</a></li>
+        <li><a href="#associese">Plano Élite</a></li>
+        <li><a href="#contato">Associe-se</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; 2024 <span>9MM Clube de Tiro</span>. Todos os direitos reservados.</p>
+    <div class="legal-links">
+      <a href="#">Política de Privacidade</a>
+      <a href="#">Termos de Uso</a>
+      <a href="#">Regulamento</a>
+    </div>
+  </div>
+</footer>
+
+<!-- Back to top -->
+<button id="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Voltar ao topo">↑</button>
+
+<script>
+  // ── NAV SCROLL ──
+  const navbar = document.getElementById('navbar');
+  const backTop = document.getElementById('back-top');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 80) {
+      navbar.classList.add('scrolled');
+      backTop.classList.add('visible');
+    } else {
+      navbar.classList.remove('scrolled');
+      backTop.classList.remove('visible');
+    }
+  });
+
+  // ── HAMBURGER ──
+  function toggleMenu() {
+    document.getElementById('nav-links').classList.toggle('open');
+  }
+  document.querySelectorAll('.nav-links a').forEach(a => {
+    a.addEventListener('click', () => {
+      document.getElementById('nav-links').classList.remove('open');
+    });
+  });
+
+  // ── INTERSECTION OBSERVER (fade-up) ──
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+  // ── COUNTER ANIMATION ──
+  function animateCounter(el) {
+    const target = parseInt(el.dataset.target);
+    const duration = 1800;
+    const step = target / (duration / 16);
+    let current = 0;
+    const timer = setInterval(() => {
+      current += step;
+      if (current >= target) {
+        current = target;
+        clearInterval(timer);
+      }
+      el.textContent = Math.floor(current).toLocaleString('pt-BR');
+    }, 16);
+  }
+  const heroObserver = new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting) {
+      document.querySelectorAll('.counter').forEach(animateCounter);
+      heroObserver.disconnect();
+    }
+  }, { threshold: 0.5 });
+  const statsEl = document.querySelector('.hero-stats');
+  if (statsEl) heroObserver.observe(statsEl);
+
+  // ── FORM SUBMIT ──
+  function handleSubmit(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('button[type="submit"]');
+    btn.textContent = '✓ Mensagem enviada!';
+    btn.style.background = '#22c55e';
+    btn.style.color = '#fff';
+    setTimeout(() => {
+      btn.innerHTML = '<span>&#10148;</span> Enviar mensagem';
+      btn.style.background = '';
+      btn.style.color = '';
+      e.target.reset();
+    }, 3000);
+  }
+
+  // ── SMOOTH ACTIVE NAV ──
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(section => {
+      const sectionTop = section.offsetTop - 100;
+      if (window.scrollY >= sectionTop) current = section.getAttribute('id');
+    });
+    navLinks.forEach(link => {
+      link.style.color = '';
+      if (link.getAttribute('href') === `#${current}`) {
+        link.style.color = 'var(--white)';
+      }
+    });
+  });
+</script>
+</body>
+</html>
